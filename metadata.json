@@ -1,0 +1,6 @@
+{
+  "name": "Taste of Food",
+  "description": "Student-focused home-style food ordering and subscription meal service in Dehradun, Uttarakhand.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

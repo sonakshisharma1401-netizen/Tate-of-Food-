@@ -1,0 +1,94 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+        (request.auth.token.email_verified == true && (
+          request.auth.token.email == 'sonakshisharma1401@gmail.com' ||
+          request.auth.token.email == 'sonakshisharma1099@gmail.com' ||
+          request.auth.token.email == 'admin@tasteoffood.in'
+        ))
+      );
+    }
+
+    // 1. Users collection
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId) && request.resource.data.role != 'admin';
+      allow update: if isOwner(userId) &&
+        (request.resource.data.role == resource.data.role || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // 2. Products / Menu Items - Publicly readable, writeable only by Owner/Admin
+    match /products/{productId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+    match /menuItems/{itemId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // 3. Orders collection - Customers read their own orders, Admins manage all
+    match /orders/{orderId} {
+      allow read: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow create: if (!isSignedIn() || request.resource.data.userId == request.auth.uid) &&
+                       request.resource.data.totalAmount is number &&
+                       request.resource.data.totalAmount >= 0;
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // 4. Subscriptions collection - Student meal tiffins
+    match /subscriptions/{subscriptionId} {
+      allow read: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow create: if isSignedIn() || request.resource.data.customerName != null;
+      allow update: if isAdmin() || (
+        isSignedIn() && resource.data.userId == request.auth.uid &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'pausedDates', 'deliveryAddress', 'phone', 'hostelName', 'area'])
+      );
+      allow delete: if isAdmin();
+    }
+
+    // 5. Party Bookings & Catering Enquiries
+    match /partyBookings/{bookingId} {
+      allow read: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow create: if true; // Allows students and campus guests to send party booking requests
+      allow update, delete: if isAdmin();
+    }
+    match /cateringBookings/{bookingId} {
+      allow read: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow create: if true;
+      allow update, delete: if isAdmin();
+    }
+
+    // 6. Reviews collection - Publicly readable
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if true; // Allow student reviews
+      allow update, delete: if isAdmin();
+    }
+
+    // Admins listing
+    match /admins/{adminUid} {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+  }
+}

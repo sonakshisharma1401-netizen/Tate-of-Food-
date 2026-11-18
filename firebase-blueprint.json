@@ -1,0 +1,177 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Represents an authenticated user profile for students, customers or admins.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 120 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "collegeOrHostel": { "type": "string", "maxLength": 150 },
+        "area": { "type": "string", "maxLength": 100 },
+        "deliveryAddress": { "type": "string", "maxLength": 300 },
+        "role": { "type": "string", "enum": ["student", "admin"] },
+        "avatarUrl": { "type": "string", "maxLength": 500 },
+        "referralCode": { "type": "string", "maxLength": 20 },
+        "createdAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["uid", "name", "email", "role"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "A food dish, thali, meal or beverage item offered on the menu.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "name": { "type": "string", "maxLength": 120 },
+        "hindiName": { "type": "string", "maxLength": 120 },
+        "description": { "type": "string", "maxLength": 600 },
+        "price": { "type": "number" },
+        "originalPrice": { "type": "number" },
+        "category": { "type": "string", "maxLength": 50 },
+        "dietary": { "type": "string", "enum": ["veg", "non-veg"] },
+        "image": { "type": "string", "maxLength": 600 },
+        "isAvailable": { "type": "boolean" },
+        "isPopular": { "type": "boolean" },
+        "portionSize": { "type": "string", "maxLength": 100 },
+        "calories": { "type": "number" },
+        "spiceLevel": { "type": "string", "enum": ["Mild", "Medium", "Spicy"] },
+        "rating": { "type": "number" },
+        "reviewCount": { "type": "number" },
+        "updatedAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "name", "price", "category", "dietary", "isAvailable"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "A student food order placed on the platform.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "customerName": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "email": { "type": "string", "maxLength": 120 },
+        "hostelName": { "type": "string", "maxLength": 150 },
+        "area": { "type": "string", "maxLength": 100 },
+        "address": { "type": "string", "maxLength": 300 },
+        "deliveryInstructions": { "type": "string", "maxLength": 300 },
+        "subtotal": { "type": "number" },
+        "deliveryCharge": { "type": "number" },
+        "discount": { "type": "number" },
+        "totalAmount": { "type": "number" },
+        "paymentMethod": { "type": "string", "enum": ["cod", "upi_demo"] },
+        "paymentStatus": { "type": "string", "maxLength": 50 },
+        "orderStatus": { "type": "string", "enum": ["Placed", "Kitchen Preparing", "Out for Delivery", "Delivered", "Cancelled"] },
+        "createdAt": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "userId", "customerName", "phone", "totalAmount", "paymentMethod", "orderStatus"]
+    },
+    "Subscription": {
+      "title": "Subscription",
+      "description": "A weekly, monthly, or custom meal subscription.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "customerName": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "planType": { "type": "string", "enum": ["weekly", "monthly", "custom"] },
+        "planTitle": { "type": "string", "maxLength": 100 },
+        "mealSlot": { "type": "string", "enum": ["lunch", "dinner", "both"] },
+        "dietary": { "type": "string", "enum": ["veg", "non-veg"] },
+        "startDate": { "type": "string", "maxLength": 30 },
+        "endDate": { "type": "string", "maxLength": 30 },
+        "totalDays": { "type": "number" },
+        "remainingDays": { "type": "number" },
+        "pricePerDay": { "type": "number" },
+        "totalAmount": { "type": "number" },
+        "status": { "type": "string", "enum": ["Active", "Paused", "Expired"] },
+        "deliveryAddress": { "type": "string", "maxLength": 300 },
+        "area": { "type": "string", "maxLength": 100 },
+        "hostelName": { "type": "string", "maxLength": 150 }
+      },
+      "required": ["id", "userId", "customerName", "planType", "mealSlot", "totalAmount", "status"]
+    },
+    "PartyBooking": {
+      "title": "PartyBooking",
+      "description": "A birthday party or college event catering booking enquiry.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "clientName": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "email": { "type": "string", "maxLength": 120 },
+        "packageType": { "type": "string", "enum": ["Basic", "Standard", "Premium", "Custom"] },
+        "guestCount": { "type": "number" },
+        "eventDate": { "type": "string", "maxLength": 30 },
+        "eventTime": { "type": "string", "maxLength": 30 },
+        "eventLocation": { "type": "string", "maxLength": 300 },
+        "selectedMenu": { "type": "string", "maxLength": 500 },
+        "specialRequests": { "type": "string", "maxLength": 500 },
+        "estimatedBudget": { "type": "number" },
+        "status": { "type": "string", "enum": ["Enquiry Received", "Quotation Sent", "Confirmed", "Completed", "Cancelled"] },
+        "createdAt": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "clientName", "phone", "packageType", "guestCount", "eventDate", "status"]
+    },
+    "ReviewFeedback": {
+      "title": "ReviewFeedback",
+      "description": "Student reviews and feedback on dishes and service.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "userName": { "type": "string", "maxLength": 100 },
+        "college": { "type": "string", "maxLength": 150 },
+        "rating": { "type": "number" },
+        "comment": { "type": "string", "maxLength": 600 },
+        "dishName": { "type": "string", "maxLength": 100 },
+        "date": { "type": "string", "maxLength": 40 },
+        "verifiedStudent": { "type": "boolean" }
+      },
+      "required": ["id", "userName", "rating", "comment"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Private user profiles, student info and delivery addresses."
+    },
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Catalog of food menu dishes, student special thalis and combos."
+    },
+    "/menuItems/{itemId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Compatibility alias for food menu items."
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Customer food orders and delivery statuses."
+    },
+    "/subscriptions/{subscriptionId}": {
+      "schema": { "$ref": "#/entities/Subscription" },
+      "description": "Weekly and monthly student meal tiffin subscriptions."
+    },
+    "/partyBookings/{bookingId}": {
+      "schema": { "$ref": "#/entities/PartyBooking" },
+      "description": "Birthday party and college celebration catering enquiries."
+    },
+    "/cateringBookings/{bookingId}": {
+      "schema": { "$ref": "#/entities/PartyBooking" },
+      "description": "Compatibility alias for party catering bookings."
+    },
+    "/reviews/{reviewId}": {
+      "schema": { "$ref": "#/entities/ReviewFeedback" },
+      "description": "Customer food ratings and testimonials."
+    },
+    "/admins/{adminUid}": {
+      "schema": { "type": "object" },
+      "description": "Listing of verified admin user IDs."
+    }
+  }
+}
